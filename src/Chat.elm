@@ -38,7 +38,51 @@ type alias User =
 
 model: Model
 model =
-    { chats = []
+    { chats =
+        [   { id = 1
+            , user =
+                { id = 2
+                , profilePicture = "https://avatars0.githubusercontent.com/u/7922109?v=3&s=460"
+                , name = "Ryan Clark"
+                }
+            , messages=
+                [   { contents = "Hey!"
+                    , from = 2
+                    , timestamp = 1424469793023
+                    }
+                ,   { contents = "Hey, what's up?"
+                    , from = 1
+                    , timestamp = 1424469794000
+                    }
+                ]
+            }
+        ,   { id = 2
+            , user =
+              { id = 3
+              , profilePicture = "https://avatars3.githubusercontent.com/u/2955483?v=3&s=460"
+              , name = "Jilles Soeters"
+              }
+            , messages=
+              [   { contents = "Want a game of ping pong?"
+                  , from = 3
+                  , timestamp = 1424352522000
+                  }
+              ]
+            }
+        ,    { id = 3
+                    , user =
+                      { id = 4
+                      , profilePicture = "https://avatars1.githubusercontent.com/u/1655968?v=3&s=460"
+                      , name = "JTodd Motto"
+                      }
+                    , messages=
+                      [   { contents = "Please follow me on twitter I'll pay you"
+                          , from = 4
+                          , timestamp = 1424423579000
+                          }
+                      ]
+                    }
+        ]
     , openChatID = 1
     }
 
@@ -61,25 +105,34 @@ update action model =
     case action of
         NoOp -> model
 
-        UpdateOpenChatID id ->
-                    { model |
-                        openChatID <- id
-                    }
+        UpdateOpenChatID id -> { model | openChatID <- id }
 
         NewMessage contents timestamp ->
-            let updateChat chat = if chat.id == model.openChatID then {chat | messages <- chat.messages ++ [newMessage contents timestamp] } else chat
+            let updateChat chat =
+                if chat.id == model.openChatID
+                then {chat | messages <- chat.messages ++ [newMessage contents timestamp] }
+                else chat
             in
-            {   model |
+                { model |
                     chats <- List.map updateChat model.chats
-            }
-
+                }
 
 
 ---- VIEW ----
 title : Html
 title = text "chats"
-link : Html
-link = text "link"
+chatListItem : Chat -> Html
+chatListItem chat = a
+           [ class "mdl-navigation__link"
+           ]
+           [ text chat.user.name
+           ]
+
+chatList : List Html
+chatList =
+    let buildChatListItem chat =
+        chatListItem chat
+    in List.map buildChatListItem model.chats
 
 view : Address Action -> Model -> Html
 view address model =
@@ -98,12 +151,7 @@ view address model =
         , nav
             [ class "mdl-navigation"
             ]
-            [ a
-                [ class "mdl-navigation__link"
-                ]
-                [ link
-                ]
-            ]
+            chatList
         ]
     ]
     --}

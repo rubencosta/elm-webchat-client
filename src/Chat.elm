@@ -78,6 +78,8 @@ update action model =
 ---- VIEW ----
 title : Html
 title = text "chats"
+link : Html
+link = text "link"
 
 view : Address Action -> Model -> Html
 view address model =
@@ -92,6 +94,15 @@ view address model =
             [ class "mdl-layout-title"
             ]
             [ title
+            ]
+        , nav
+            [ class "mdl-navigation"
+            ]
+            [ a
+                [ class "mdl-navigation__link"
+                ]
+                [ link
+                ]
             ]
         ]
     ]

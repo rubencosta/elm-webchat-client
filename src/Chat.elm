@@ -129,10 +129,7 @@ chatListItem chat = a
            ]
 
 chatList : List Html
-chatList =
-    let buildChatListItem chat =
-        chatListItem chat
-    in List.map buildChatListItem model.chats
+chatList = List.map (\chat -> chatListItem chat) model.chats
 
 view : Address Action -> Model -> Html
 view address model =

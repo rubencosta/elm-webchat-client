@@ -1,15 +1,15 @@
 module Chat where
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Time exposing (..)
+import Time exposing (Time)
 import Signal exposing (Address)
 import Window
 import StartApp
 
 main =
-  StartApp.start { model = model, view = view, update = update }
+    StartApp.start { model = model, view = view, update = update }
 
 
 ---- MODEL ----
@@ -121,6 +121,7 @@ update action model =
 
 
 ---- VIEW ----
+
 view : Address Action -> Model -> Html
 view address model =
     let
@@ -163,30 +164,30 @@ view address model =
 
 
     in
-    {--}
-    div
-    [ class "mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button"
-    ]
-    [ div
-        [ class "mdl-layout__drawer"
-        ]
-        [ span
-            [ class "mdl-layout-title"
-            ]
-            [ title
-            ]
-        , nav
-            [ class "mdl-navigation"
-            ]
-            chatList
-        ]
-    , div
-        [ class "mdl-layout__content"
+        {--}
+        div
+        [ class "mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button"
         ]
         [ div
-            [ class "page-content"
+            [ class "mdl-layout__drawer"
             ]
-            messageList
+            [ span
+                [ class "mdl-layout-title"
+                ]
+                [ title
+                ]
+            , nav
+                [ class "mdl-navigation"
+                ]
+                chatList
+            ]
+        , div
+            [ class "mdl-layout__content"
+            ]
+            [ div
+                [ class "page-content"
+                ]
+                messageList
+            ]
         ]
-    ]
-    --}
+        --}

@@ -2,6 +2,7 @@ module Chat where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Time exposing (..)
 import Signal exposing (Address)
 import Window
@@ -36,7 +37,7 @@ type alias User =
     , name : String
     }
 
-model: Model
+model : Model
 model =
     { chats =
         [   { id = 1
@@ -121,6 +122,7 @@ update action model =
 ---- VIEW ----
 title : Html
 title = text "chats"
+
 chatListItem : Chat -> Html
 chatListItem chat = a
            [ class "mdl-navigation__link"
@@ -130,6 +132,23 @@ chatListItem chat = a
 
 chatList : List Html
 chatList = List.map (\chat -> chatListItem chat) model.chats
+
+messageListItem : Message -> Html
+messageListItem message = div
+            [ class "mdl-shadow--2dp"
+            ]
+            [ text message.contents
+            ]
+
+
+messageList : List Html
+messageList =
+   List.map (\message -> messageListItem message) activeChatMessages
+
+activeChatMessages : List Message
+activeChatMessages =
+    case List.head (List.filter (\ chat -> chat.id == model.openChatID) model.chats) of
+    Just chat -> chat.messages
 
 view : Address Action -> Model -> Html
 view address model =
@@ -149,6 +168,14 @@ view address model =
             [ class "mdl-navigation"
             ]
             chatList
+        ]
+    , div
+        [ class "mdl-layout__content"
+        ]
+        [ div
+            [ class "page-content"
+            ]
+            messageList
         ]
     ]
     --}

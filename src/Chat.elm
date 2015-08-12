@@ -109,10 +109,11 @@ update action model =
         UpdateOpenChatID id -> { model | openChatID <- id }
 
         NewMessage contents timestamp ->
-            let updateChat chat =
-                if chat.id == model.openChatID
-                then {chat | messages <- chat.messages ++ [newMessage contents timestamp] }
-                else chat
+            let
+                updateChat chat =
+                    if chat.id == model.openChatID
+                    then {chat | messages <- chat.messages ++ [newMessage contents timestamp] }
+                    else chat
             in
                 { model |
                     chats <- List.map updateChat model.chats
@@ -120,38 +121,48 @@ update action model =
 
 
 ---- VIEW ----
-title : Html
-title = text "chats"
-
-chatListItem : Chat -> Html
-chatListItem chat = a
-           [ class "mdl-navigation__link"
-           ]
-           [ text chat.user.name
-           ]
-
-chatList : List Html
-chatList = List.map (\chat -> chatListItem chat) model.chats
-
-messageListItem : Message -> Html
-messageListItem message = div
-            [ class "mdl-shadow--2dp"
-            ]
-            [ text message.contents
-            ]
-
-
-messageList : List Html
-messageList =
-   List.map (\message -> messageListItem message) activeChatMessages
-
-activeChatMessages : List Message
-activeChatMessages =
-    case List.head (List.filter (\ chat -> chat.id == model.openChatID) model.chats) of
-    Just chat -> chat.messages
-
 view : Address Action -> Model -> Html
 view address model =
+    let
+        title : Html
+        title =
+            text "chats"
+
+        chatListItem : Chat -> Html
+        chatListItem chat =
+            a
+                [ class "mdl-navigation__link"
+                , onClick address (UpdateOpenChatID chat.id)
+                ]
+                [ text chat.user.name
+                ]
+
+        chatList : List Html
+        chatList =
+            List.map (\chat -> chatListItem chat) model.chats
+
+        messageListItem : Message -> Html
+        messageListItem message =
+            div
+                [ class "mdl-shadow--2dp"
+                ]
+                [ text message.contents
+                ]
+
+
+        messageList : List Html
+        messageList =
+            List.map (\message -> messageListItem message) activeChatMessages
+
+        activeChatMessages : List Message
+        activeChatMessages =
+            let activeChat = List.head (List.filter (\ chat -> chat.id == model.openChatID) model.chats)
+            in case activeChat of
+            Just chat -> chat.messages
+            Nothing -> []
+
+
+    in
     {--}
     div
     [ class "mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--overlay-drawer-button"

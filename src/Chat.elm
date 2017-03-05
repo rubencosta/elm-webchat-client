@@ -1,9 +1,9 @@
 module Chat where
 
 import Html exposing (..)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
-import Time exposing (Time)
+import Html.Attributes exposing (class, type')
+import Html.Events exposing (..)
+import Time exposing (Time, timestamp)
 import Signal exposing (Address)
 import Window
 import StartApp
@@ -132,7 +132,7 @@ view address model =
         chatListItem : Chat -> Html
         chatListItem chat =
             a
-                [ class "mdl-navigation__link"
+                    [ class "mdl-navigation__link"
                 , onClick address (UpdateOpenChatID chat.id)
                 ]
                 [ text chat.user.name
